@@ -1,0 +1,190 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Book List</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+</head>
+<body>
+    <div class="container">
+        <h1>List of Books</h1>
+
+        <!-- Filter Form -->
+        <form action="/" method="GET">
+            <div class="form-group">
+                <label for="filter_by">Filter by :</label>
+                <select name="filter_by" id="filter_by" class="form-control">
+                    <option></option>
+
+                    <option value="author" {% if filter_by == 'author' %} selected {%endif%}>Author</option>
+                    <option value="book" {% if filter_by == 'book' %} selected {%endif%}>Books</option>
+                    <option value="publisher" {% if filter_by == 'publisher' %} selected {%endif%}>Publisher</option>
+                </select>
+                <label for="custom_filter">Custom filter:</label>
+                <select name="custom_filter" id="custom_filter" class="form-control">
+                    <option value=""></option>
+                    <option value="high_rev_per_page" {% if custom_filter == "high_rev_per_page" %}selected{% endif %}>
+                        Get Highest Revenue Per Page Written
+                    </option>
+                    <option value="more_author" {% if custom_filter == "more_author" %}selected{% endif %}>
+                        Get More than 1 Author
+                    </option>
+                    <option value="1_author" {% if custom_filter == "1_author" %}selected{% endif %}>
+                        Get Only 1 Author
+                    </option>
+                </select>
+                <label for="filter_2">Additional Filter :</label>
+                <select name="filter_2" id="filter_2" class="form-control">
+                    <option></option>
+                    <option value="pub_most_rev" {% if filter_2 == "pub_most_rev" %}selected{% endif %}>
+                        Get Publishers who has most revenue
+                    </option>
+                </select>
+                <label for="sort_by">Sort by :</label>
+                <select name="sort_by" id="sort_by" class="form-control">
+                    <option></option>
+                    <option value="revenue" {% if sort_by == "revenue" %}selected{% endif %}>Revenue</option>
+                </select>
+
+                <label for="sort_order">Sort order:</label>
+                <select name="sort_order" id="sort_order" class="form-control">
+                    <option></option>
+                    <option value="asc" {% if sort_order == "asc" %}selected{% endif %}>Ascending</option>
+                    <option value="desc" {% if sort_order == "desc" %}selected{% endif %}>Descending</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Filter</button>
+        </form>
+        <hr>
+
+
+        {% if publishers %}
+        <table class="table">
+            <thead class="thead-dark">
+                <tr>
+                    {% for col in table_columns %}
+                    <th>{{col}}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for publisher in publishers %}
+                <tr>
+                    <td>{{ publisher.name }}</td>
+                    {% for col in  table_columns %}
+                        {% if col == 'Number of Authors' %}
+                            <td>{{publisher.total_authors}}</td>
+                        {% endif %}
+                        {% if col == 'Total Pages Written' %}
+                            <td>{{publisher.total_pages_written}}</td>
+                        {% endif %}
+                        {% if col == 'Total Revenue' %}
+                            <td>{{publisher.total_revenue|floatformat:2}}</td>
+                        {% endif %}
+                        {% if col == 'Total Revenue Per Page' %}
+                            <td>{{publisher.revenue_per_page|floatformat:2}}</td>
+                        {% endif %}
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        {% elif authors %}
+                <table class="table">
+                    <thead class="thead-dark">
+                        <tr>
+                            {% for col in table_columns %}
+                            <th>{{col}}</th>
+                            {% endfor %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for author in authors %}
+                        <tr>
+                            <td>{{ author.name }}</td>
+                            {% for col in  table_columns %}
+                                {% if col == 'Number of Authors' %}
+                                    <td>{{author.total_authors}}</td>
+                                {% endif %}
+                                {% if col == 'Total Pages Written' %}
+                                    <td>{{author.total_pages_written}}</td>
+                                {% endif %}
+                                {% if col == 'Total Revenue' %}
+                                    <td>{{author.total_revenue|floatformat:2}}</td>
+                                {% endif %}
+                                {% if col == 'Total Revenue Per Page' %}
+                                    <td>{{author.revenue_per_page|floatformat:2}}</td>
+                                {% endif %}
+                            {% endfor %}
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+        {% elif books_filtered %}
+        <table class="table">
+            <thead class="thead-dark">
+                <tr>
+                    {% for col in table_columns %}
+                    <th>{{col}}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for book in books_filtered %}
+                <tr>
+
+                {% for col in  table_columns %}
+                    {% if col == 'Title' %}
+                        <td>{{book.book.title}}</td>
+                    {% endif %}
+                    {% if col == 'Top Publisher' %}
+                        <td>{{book.top_publisher.name}}</td>
+                    {% endif %}
+                    {% if col == 'Publisher Revenue' %}
+                        <td>{{book.publisher_revenue|floatformat:2}}</td>
+                    {% endif %}
+                {% endfor %}
+
+
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+
+        {% elif books %}
+        <table class="table">
+            <thead class="thead-dark">
+                <tr>
+                    {% for col in table_columns %}
+                    <th>{{col}}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for book in books %}
+                <tr>
+                    <td>{{ book.title }}</td>
+                    <td>{{ book.publisher.name }}</td>
+                    <td>
+                        {% for author in book.authors.all %}
+                            {{ author.name }}{% if not forloop.last %}, {% endif %}
+                        {% endfor %}
+                    </td>
+                    <td>{{ book.revenue }}</td>
+                    <td>{{ book.pages_written }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% endif %}
+    </div>
+<br><br>
+    <!-- Bootstrap JavaScript (optional) -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

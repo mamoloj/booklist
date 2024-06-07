@@ -1,0 +1,16 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Local development settings
+.env
+venv
+
+# Visual Studio Code settings
+.vscode/
+
+# PyCharm settings
+.idea/
+*.iml
+

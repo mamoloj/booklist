@@ -1,0 +1,39 @@
+BooksStore
+-list of books
+-publisher, revenue , pages per book, author
+-----
+I want to create a django app that has a capability to
+-list all the books
+-what publisher has more than 1 author
+    - sort by high revenue per author
+    - sort the lowest rev. per author
+-which author, highest revenue per page written
+-list of all the books written by 1 author
+    -publisher attached to that book, who has the most revenue
+
+---
+
+In django:
+-store the data
+-what publisher has more than 1 author
+    - sort by high revenue per author
+    - sort the lowest rev. per author
+-which author, highest rev. per page written
+
+-list of all the books written by 1 author
+    -publisher attached to that book, who has the most revenue
+
+
+Books
+-Name
+-pages per book
+-revenue
+
+Author
+-name
+
+Publisher
+-name
+
+-email
+josh@enduringplanet.com
